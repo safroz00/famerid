@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Farmer Enrollment Status (Aadhaar)</title>
+<style>
+  body { font-family: sans-serif; background: #f4f4f4; padding: 2em; }
+  .result { margin-top: 1em; padding: 1em; background: #fff; border-radius: 5px; }
+</style>
+</head>
+<body>
+<h1>Farmer Enrollment Status (Aadhaar)</h1>
+<div id="status" class="result">Loading...</div>
+
+<script>
+(async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const aadhaar = urlParams.get('aadhaar');
+
+  if (!aadhaar) {
+    document.getElementById('status').innerText = 'No Aadhaar number provided in URL.';
+    return;
+  }
+
+  try {
+    const response = await fetch('https://mhfr.agristack.gov.in/farmer-registry-api-mh/agristack/v1/api/farmerRegistryWorkFlowConfiguration/checkApprovalStatus', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        isCheckStatusAgainstEnrolmentNumber: false,
+        aadhaarNumber: aadhaar
+      })
+    });
+
+    if (!response.ok) {
+      document.getElementById('status').innerText = 'Error fetching data. Please try again.';
+      return;
+    }
+
+    const data = await response.json();
+    if (data.status === "success") {
+      const farmerData = data.data;
+      document.getElementById('status').innerHTML = `
+        <strong>Farmer Name:</strong> ${farmerData.farmerName} <br>
+        <strong>Approval Status:</strong> ${farmerData.approvalStatus} <br>
+        <strong>Enrollment Date:</strong> ${new Date(farmerData.enrollmentDate).toLocaleString()}
+      `;
+    } else {
+      document.getElementById('status').innerText = 'Failed to get status.';
+    }
+  } catch (error) {
+    console.error(error);
+    document.getElementById('status').innerText = 'Request failed. Please check console for details.';
+  }
+})();
+</script>
+</body>
+</html>
