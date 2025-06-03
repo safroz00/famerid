@@ -182,8 +182,9 @@
                     // Placeholder fields, adjust based on shared API response
                     statusDiv.innerHTML = `
                         <p><strong>Farmer Name:</strong> ${farmerData.farmerName || 'N/A'}</p>
-                        <p><strong>Farmer ID:</strong> ${farmerData.farmerId || 'N/A'}</p>
-                        <p><strong>Enrollment Status:</strong> ${farmerData.status || 'N/A'}</p>
+                        <p><strong>Central ID:</strong> ${farmerData.centralId || farmerData.farmerId || farmerData.enrollmentId || 'N/A'}</p>
+                        <p><strong>Enrollment Status:</strong> ${farmerData.status || farmerData.approvalStatus || 'N/A'}</p>
+                        <p><strong>Enrollment Date:</strong> ${farmerData.enrollmentDate ? new Date(farmerData.enrollmentDate).toLocaleString() : 'N/A'}</p>
                         <!-- Add more fields based on API response -->
                     `;
                 } else {
