@@ -44,6 +44,13 @@
         }
         .input-group {
             margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 5px;
+            display: block;
         }
         input[type="text"] {
             width: 100%;
@@ -76,6 +83,7 @@
         }
         .result p {
             margin: 5px 0;
+            font-size: 14px;
         }
         .error {
             color: #d32f2f;
@@ -87,6 +95,10 @@
             color: #555;
             margin-top: 20px;
         }
+        .lang-toggle {
+            margin: 10px 0;
+            text-align: right;
+        }
     </style>
 </head>
 <body>
@@ -95,8 +107,15 @@
             <img src="https://via.placeholder.com/80x40?text=Agri+Logo" alt="Agriculture Logo">
             <h2>AgriStack Maharashtra Farmer Registry</h2>
         </div>
+        <div class="lang-toggle">
+            <select id="language" onchange="changeLanguage()">
+                <option value="en">English</option>
+                <option value="mr">Marathi</option>
+            </select>
+        </div>
         <h1>Check Farmer Enrollment Status</h1>
         <div class="input-group">
+            <label for="aadhaar">Aadhaar Number</label>
             <input type="text" id="aadhaar" placeholder="Enter 12-digit Aadhaar Number" maxlength="12" pattern="\d{12}" required>
         </div>
         <button onclick="checkStatus()">Check Status</button>
@@ -106,6 +125,24 @@
     </div>
 
     <script>
+        // Language toggle
+        function changeLanguage() {
+            const lang = document.getElementById('language').value;
+            if (lang === 'mr') {
+                document.querySelector('h1').innerText = 'शेतकरी नोंदणी स्थिती तपासा';
+                document.querySelector('label[for="aadhaar"]').innerText = 'आधार क्रमांक';
+                document.querySelector('#aadhaar').placeholder = '12-अंकी आधार क्रमांक प्रविष्ट करा';
+                document.querySelector('button').innerText = 'स्थिती तपासा';
+                document.querySelector('#status').innerText = 'स्थिती तपासण्यासाठी आपला आधार क्रमांक प्रविष्ट करा.';
+            } else {
+                document.querySelector('h1').innerText = 'Check Farmer Enrollment Status';
+                document.querySelector('label[for="aadhaar"]').innerText = 'Aadhaar Number';
+                document.querySelector('#aadhaar').placeholder = 'Enter 12-digit Aadhaar Number';
+                document.querySelector('button').innerText = 'Check Status';
+                document.querySelector('#status').innerText = 'Enter your Aadhaar number to check status.';
+            }
+        }
+
         async function checkStatus() {
             const aadhaar = document.getElementById('aadhaar').value;
             const statusDiv = document.getElementById('status');
@@ -126,7 +163,8 @@
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        // Add any additional headers if required (e.g., 'Origin': 'https://mhfr.agristack.gov.in')
+                        'Origin': 'https://mhfr.agristack.gov.in',
+                        'Referer': 'https://mhfr.agristack.gov.in/'
                     },
                     body: JSON.stringify({
                         isCheckStatusAgainstEnrolmentNumber: false,
@@ -141,17 +179,12 @@
                 const data = await response.json();
                 if (data.status === 'success' && data.data) {
                     const farmerData = data.data;
-                    // Display all possible fields (adjust based on actual API response)
+                    // Placeholder fields, adjust based on shared API response
                     statusDiv.innerHTML = `
                         <p><strong>Farmer Name:</strong> ${farmerData.farmerName || 'N/A'}</p>
                         <p><strong>Farmer ID:</strong> ${farmerData.farmerId || 'N/A'}</p>
-                        <p><strong>Approval Status:</strong> ${farmerData.approvalStatus || 'N/A'}</p>
-                        <p><strong>Enrollment Date:</strong> ${farmerData.enrollmentDate ? new Date(farmerData.enrollmentDate).toLocaleString() : 'N/A'}</p>
-                        <p><strong>Village:</strong> ${farmerData.village || 'N/A'}</p>
-                        <p><strong>Taluka:</strong> ${farmerData.taluka || 'N/A'}</p>
-                        <p><strong>District:</strong> ${farmerData.district || 'N/A'}</p>
-                        <p><strong>Land Details:</strong> ${farmerData.landDetails?.surveyNumber || 'N/A'}</p>
-                        <p><strong>Scheme Eligibility:</strong> ${farmerData.schemeEligibility || 'N/A'}</p>
+                        <p><strong>Enrollment Status:</strong> ${farmerData.status || 'N/A'}</p>
+                        <!-- Add more fields based on API response -->
                     `;
                 } else {
                     statusDiv.innerText = 'No data found for this Aadhaar number.';
@@ -159,17 +192,20 @@
             } catch (error) {
                 console.error('Error:', error);
                 statusDiv.innerText = '';
-                errorDiv.innerText = 'Failed to fetch status. This may be due to CORS restrictions or API access limits. Please try on the official website.';
+                errorDiv.innerText = 'Failed to fetch status. This may be due to CORS restrictions or API access limits. Redirecting to official site...';
+                setTimeout(() => {
+                    window.location.href = 'https://mhfr.agristack.gov.in/farmer-registry-mh/#/checkEnrolmentStatus';
+                }, 2000);
             }
         }
 
-        // Pre-fill Aadhaar from URL parameter for QR code
+        // Auto-fetch status if Aadhaar is in URL (for QR code)
         window.onload = () => {
             const urlParams = new URLSearchParams(window.location.search);
             const aadhaar = urlParams.get('aadhaar');
             if (aadhaar && aadhaar.length === 12 && /^\d{12}$/.test(aadhaar)) {
                 document.getElementById('aadhaar').value = aadhaar;
-                checkStatus(); // Auto-fetch status
+                checkStatus();
             }
         };
     </script>
