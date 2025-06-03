@@ -1414,50 +1414,9 @@
         <div id="nb-global-spinner" class="spinner">
             <img src="assets/img/loader.gif" alt="loading...">
         </div>
-        <script>
-(async () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const aadhaar = urlParams.get('aadhaar');
-
-  if (!aadhaar) {
-    document.getElementById('status').innerText = 'No Aadhaar number provided in URL.';
-    return;
-  }
-
-  try {
-    const response = await fetch('https://mhfr.agristack.gov.in/farmer-registry-api-mh/agristack/v1/api/farmerRegistryWorkFlowConfiguration/checkApprovalStatus', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        isCheckStatusAgainstEnrolmentNumber: false,
-        aadhaarNumber: aadhaar
-      })
-    });
-
-    if (!response.ok) {
-      document.getElementById('status').innerText = 'Error fetching data. Please try again.';
-      return;
-    }
-
-    const data = await response.json();
-    if (data.status === "success") {
-      const farmerData = data.data;
-      document.getElementById('status').innerHTML = `
-        <strong>Farmer Name:</strong> ${farmerData.farmerName} <br>
-        <strong>Approval Status:</strong> ${farmerData.approvalStatus} <br>
-        <strong>Enrollment Date:</strong> ${new Date(farmerData.enrollmentDate).toLocaleString()}
-      `;
-    } else {
-      document.getElementById('status').innerText = 'Failed to get status.';
-    }
-  } catch (error) {
-    console.error(error);
-    document.getElementById('status').innerText = 'Request failed. Please check console for details.';
-  }
-})();
-</script>
+        <script src="runtime.1e281fc68d52ec60fe78.js" defer></script>
+        <script src="polyfills.929ccbe3d95733abd3c0.js" defer></script>
+        <script src="scripts.3fcf699c83d063284d0e.js" defer></script>
+        <script src="main.1f1d966a8e0891d1e915.js" defer></script>
     </body>
 </html>
