@@ -201,14 +201,29 @@
         }
 
         // Auto-fetch status if Aadhaar is in URL (for QR code)
-        window.onload = () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const aadhaar = urlParams.get('aadhaar');
-            if (aadhaar && aadhaar.length === 12 && /^\d{12}$/.test(aadhaar)) {
-                document.getElementById('aadhaar').value = aadhaar;
-                checkStatus();
-            }
-        };
+        // Replace this block in window.onload
+window.onload = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+
+    if (!id) return;
+
+    try {
+        const res = await fetch('data/map.json');
+        const map = await res.json();
+
+        if (map[id]) {
+            document.getElementById('aadhaar').value = map[id];
+            checkStatus();
+        } else {
+            document.getElementById('status').innerText = 'Invalid or expired QR code.';
+        }
+    } catch (err) {
+        console.error(err);
+        document.getElementById('status').innerText = 'Error fetching status mapping.';
+    }
+};
+
     </script>
 </body>
 </html>
