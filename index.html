@@ -3,165 +3,597 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farmer Enrollment Status Check</title>
+    <title>AgriStack Maharashtra - Farmer Registry Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f2f5;
+        * {
             margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            width: 100%;
-            text-align: center;
-        }
-        .header {
-            background-color: #1a5f2b;
-            color: white;
-            padding: 15px;
-            border-radius: 5px 5px 0 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .header img {
-            max-width: 80px;
-            margin-right: 10px;
-        }
-        h1 {
-            color: #1a5f2b;
-            font-size: 24px;
-            margin: 20px 0;
-        }
-        .input-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        label {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 5px;
-            display: block;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 0;
             box-sizing: border-box;
         }
-        button {
-            background-color: #28a745;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            text-align: left;
-        }
-        .result p {
-            margin: 5px 0;
-            font-size: 14px;
-        }
-        .error {
-            color: #d32f2f;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-        .disclaimer {
-                        font-size: 14px;
-                        color: #b22222; /* Firebrick red for urgency */
-                        margin-top: 20px;
-                        font-weight: bold;
-                        background-color: #fff3cd; /* Light yellow background */
-                        padding: 10px;
-                        border-left: 4px solid #ffa500; /* Orange attention line */
-                        border-radius: 4px;
-                    }
 
-        .lang-toggle {
-            margin: 10px 0;
+        :root {
+            --primary-green: #0f7b0f;
+            --primary-green-dark: #0d6b0d;
+            --primary-green-light: #e8f5e8;
+            --secondary-orange: #ff8c00;
+            --secondary-orange-light: #fff3e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-light: #999999;
+            --background-primary: #ffffff;
+            --background-secondary: #f8faf9;
+            --border-color: #e0e6e0;
+            --shadow-light: 0 2px 8px rgba(15, 123, 15, 0.08);
+            --shadow-medium: 0 4px 16px rgba(15, 123, 15, 0.12);
+            --shadow-heavy: 0 8px 32px rgba(15, 123, 15, 0.16);
+            --border-radius: 12px;
+            --border-radius-small: 8px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--background-secondary) 0%, #f0f8f0 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .main-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--background-primary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-heavy);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+            color: white;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(180deg); }
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        .language-selector {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 2;
+        }
+
+        .language-select {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius-small);
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .language-select:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .content {
+            padding: 2rem 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-small);
+            background: var(--background-primary);
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(15, 123, 15, 0.1);
+        }
+
+        .form-input:invalid {
+            border-color: #dc3545;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-small);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-container {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: var(--background-secondary);
+            border-radius: var(--border-radius-small);
+            border-left: 4px solid var(--primary-green);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: var(--transition);
+        }
+
+        .result-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .result-value {
+            font-weight: 600;
+            color: var(--text-primary);
             text-align: right;
+            flex: 1;
+            margin-left: 1rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-approved {
+            background: var(--primary-green-light);
+            color: var(--primary-green);
+        }
+
+        .status-pending {
+            background: var(--secondary-orange-light);
+            color: var(--secondary-orange);
+        }
+
+        .error-message {
+            background: #fee;
+            color: #d32f2f;
+            padding: 1rem;
+            border-radius: var(--border-radius-small);
+            border-left: 4px solid #d32f2f;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .disclaimer {
+            background: linear-gradient(135deg, var(--secondary-orange-light) 0%, #fff8f0 100%);
+            color: var(--secondary-orange);
+            padding: 1.5rem;
+            margin: 1.5rem -1.5rem -2rem -1.5rem;
+            border-top: 1px solid rgba(255, 140, 0, 0.2);
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .whatsapp-link {
+            color: var(--secondary-orange);
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px solid transparent;
+            transition: var(--transition);
+        }
+
+        .whatsapp-link:hover {
+            border-bottom-color: var(--secondary-orange);
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+            }
+
+            .main-container {
+                margin: 1rem auto;
+                border-radius: var(--border-radius-small);
+            }
+
+            .header {
+                padding: 1.5rem 1rem;
+            }
+
+            .header-title {
+                font-size: 1.25rem;
+            }
+
+            .content {
+                padding: 1.5rem 1rem;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .result-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+
+            .result-value {
+                text-align: left;
+                margin-left: 0;
+            }
+        }
+
+        /* Desktop Optimizations */
+        @media (min-width: 768px) {
+            body {
+                padding: 2rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+            }
+
+            .main-container {
+                max-width: 520px;
+                margin: 0;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            :root {
+                --border-color: #000;
+                --text-secondary: #000;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <img src="https://mhfr.agristack.gov.in/farmer-registry-mh/assets/img/logo.png" alt="Agriculture Logo">
-            <h2>AgriStack Maharashtra Farmer Registry</h2>
-        </div>
-        <div class="lang-toggle">
-            <select id="language" onchange="changeLanguage()">
-                <option value="en">English</option>
-                <option value="mr">Marathi</option>
-            </select>
-        </div>
-        <h1>Check Farmer Enrollment Status</h1>
-        <div class="input-group">
-            <label for="aadhaar">Aadhaar Number</label>
-            <input type="text" id="aadhaar" placeholder="Enter 12-digit Aadhaar Number" maxlength="12" pattern="\d{12}" required>
-        </div>
-        <button onclick="checkStatus()">Check Status</button>
-        <div id="status" class="result">Enter your Aadhaar number to check status.</div>
-        <p class="error" id="error"></p>
-        <p class="disclaimer">आपला वयक्तिक QR मिळवण्यासाठी संपर्क करा WhatsApp 📲 8767355101</p>
+    <div class="main-container">
+        <header class="header">
+            <div class="language-selector">
+                <select id="language" class="language-select" onchange="changeLanguage()" aria-label="Select Language">
+                    <option value="en">English</option>
+                    <option value="mr">मराठी</option>
+                </select>
+            </div>
+            
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="https://mhfr.agristack.gov.in/farmer-registry-mh/assets/img/logo.png" alt="AgriStack Maharashtra Logo">
+                </div>
+            </div>
+            
+            <h1 class="header-title">AgriStack Maharashtra</h1>
+            <p class="header-subtitle">Farmer Registry Portal</p>
+        </header>
+
+        <main class="content">
+            <h2 class="section-title" id="main-title">Check Enrollment Status</h2>
+            <p class="section-subtitle" id="main-subtitle">Enter your Aadhaar number to verify your farmer registration status</p>
+
+            <form onsubmit="event.preventDefault(); checkStatus();">
+                <div class="form-group">
+                    <label for="aadhaar" class="form-label" id="aadhaar-label">Aadhaar Number</label>
+                    <div class="input-container">
+                        <input 
+                            type="text" 
+                            id="aadhaar" 
+                            class="form-input"
+                            placeholder="Enter 12-digit Aadhaar Number" 
+                            maxlength="12" 
+                            pattern="\d{12}" 
+                            required
+                            autocomplete="off"
+                            inputmode="numeric"
+                            aria-describedby="aadhaar-help"
+                        >
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-button" id="submit-btn">
+                    <span class="loading-spinner" id="loading-spinner"></span>
+                    <span id="submit-text">Check Status</span>
+                </button>
+            </form>
+
+            <div id="result-container" class="result-container">
+                <div id="status-content"></div>
+            </div>
+
+            <div id="error-container"></div>
+        </main>
+
+        <footer class="disclaimer">
+            <p id="disclaimer-text">
+                आपला वयक्तिक QR मिळवण्यासाठी संपर्क करा 
+                <a href="https://wa.me/918767355101" class="whatsapp-link" target="_blank" rel="noopener">
+                    WhatsApp 📲 8767355101
+                </a>
+            </p>
+        </footer>
     </div>
 
     <script>
-        // Language toggle
+        // Language translations
+        const translations = {
+            en: {
+                mainTitle: 'Check Enrollment Status',
+                mainSubtitle: 'Enter your Aadhaar number to verify your farmer registration status',
+                aadhaarLabel: 'Aadhaar Number',
+                aadhaarPlaceholder: 'Enter 12-digit Aadhaar Number',
+                submitText: 'Check Status',
+                loadingText: 'Checking...',
+                disclaimerText: 'आपला वयक्तिक QR मिळवण्यासाठी संपर्क करा WhatsApp 📲 8767355101',
+                farmerName: 'Farmer Name',
+                centralId: 'Central ID',
+                enrollmentStatus: 'Enrollment Status',
+                enrollmentDate: 'Enrollment Date',
+                invalidAadhaar: 'Please enter a valid 12-digit Aadhaar number.',
+                noDataFound: 'No data found for this Aadhaar number.',
+                apiError: 'Failed to fetch status. Redirecting to official site...',
+                invalidQR: 'Invalid or expired QR code.',
+                fetchError: 'Error fetching status mapping.'
+            },
+            mr: {
+                mainTitle: 'नोंदणी स्थिती तपासा',
+                mainSubtitle: 'आपल्या शेतकरी नोंदणीची स्थिती तपासण्यासाठी आधार क्रमांक प्रविष्ट करा',
+                aadhaarLabel: 'आधार क्रमांक',
+                aadhaarPlaceholder: '12-अंकी आधार क्रमांक प्रविष्ट करा',
+                submitText: 'स्थिती तपासा',
+                loadingText: 'तपासत आहे...',
+                disclaimerText: 'आपला वयक्तिक QR मिळवण्यासाठी संपर्क करा WhatsApp 📲 8767355101',
+                farmerName: 'शेतकरी नाव',
+                centralId: 'केंद्रीय आयडी',
+                enrollmentStatus: 'नोंदणी स्थिती',
+                enrollmentDate: 'नोंदणी दिनांक',
+                invalidAadhaar: 'कृपया वैध 12-अंकी आधार क्रमांक प्रविष्ट करा.',
+                noDataFound: 'या आधार क्रमांकासाठी कोणताही डेटा आढळला नाही.',
+                apiError: 'स्थिती आणण्यात अयशस्वी. अधिकृत साइटवर पुनर्निर्देशित करत आहे...',
+                invalidQR: 'अवैध किंवा कालबाह्य QR कोड.',
+                fetchError: 'स्थिती मॅपिंग आणण्यात त्रुटी.'
+            }
+        };
+
+        let currentLang = 'en';
+
         function changeLanguage() {
             const lang = document.getElementById('language').value;
-            if (lang === 'mr') {
-                document.querySelector('h1').innerText = 'शेतकरी नोंदणी स्थिती तपासा';
-                document.querySelector('label[for="aadhaar"]').innerText = 'आधार क्रमांक';
-                document.querySelector('#aadhaar').placeholder = '12-अंकी आधार क्रमांक प्रविष्ट करा';
-                document.querySelector('button').innerText = 'स्थिती तपासा';
-                document.querySelector('#status').innerText = 'स्थिती तपासण्यासाठी आपला आधार क्रमांक प्रविष्ट करा.';
+            currentLang = lang;
+            const t = translations[lang];
+
+            document.getElementById('main-title').textContent = t.mainTitle;
+            document.getElementById('main-subtitle').textContent = t.mainSubtitle;
+            document.getElementById('aadhaar-label').textContent = t.aadhaarLabel;
+            document.getElementById('aadhaar').placeholder = t.aadhaarPlaceholder;
+            document.getElementById('submit-text').textContent = t.submitText;
+            document.getElementById('disclaimer-text').innerHTML = `
+                ${t.disclaimerText.split('WhatsApp')[0]}
+                <a href="https://wa.me/918767355101" class="whatsapp-link" target="_blank" rel="noopener">
+                    WhatsApp 📲 8767355101
+                </a>
+            `;
+        }
+
+        function showError(message) {
+            const errorContainer = document.getElementById('error-container');
+            errorContainer.innerHTML = `<div class="error-message">${message}</div>`;
+            setTimeout(() => {
+                errorContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        function showResult(content) {
+            const resultContainer = document.getElementById('result-container');
+            const statusContent = document.getElementById('status-content');
+            
+            statusContent.innerHTML = content;
+            resultContainer.classList.add('show');
+        }
+
+        function hideResult() {
+            const resultContainer = document.getElementById('result-container');
+            resultContainer.classList.remove('show');
+        }
+
+        function setLoading(isLoading) {
+            const button = document.getElementById('submit-btn');
+            const spinner = document.getElementById('loading-spinner');
+            const submitText = document.getElementById('submit-text');
+            const t = translations[currentLang];
+
+            if (isLoading) {
+                button.disabled = true;
+                spinner.style.display = 'inline-block';
+                submitText.textContent = t.loadingText;
             } else {
-                document.querySelector('h1').innerText = 'Check Farmer Enrollment Status';
-                document.querySelector('label[for="aadhaar"]').innerText = 'Aadhaar Number';
-                document.querySelector('#aadhaar').placeholder = 'Enter 12-digit Aadhaar Number';
-                document.querySelector('button').innerText = 'Check Status';
-                document.querySelector('#status').innerText = 'Enter your Aadhaar number to check status.';
+                button.disabled = false;
+                spinner.style.display = 'none';
+                submitText.textContent = t.submitText;
             }
         }
 
         async function checkStatus() {
             const aadhaar = document.getElementById('aadhaar').value;
-            const statusDiv = document.getElementById('status');
-            const errorDiv = document.getElementById('error');
+            const t = translations[currentLang];
 
+            // Clear previous results and errors
+            hideResult();
+            document.getElementById('error-container').innerHTML = '';
+
+            // Validation
             if (!aadhaar || aadhaar.length !== 12 || !/^\d{12}$/.test(aadhaar)) {
-                errorDiv.innerText = 'Please enter a valid 12-digit Aadhaar number.';
-                statusDiv.innerText = '';
+                showError(t.invalidAadhaar);
                 return;
             }
 
-            errorDiv.innerText = '';
-            statusDiv.innerText = 'Loading...';
+            setLoading(true);
 
             try {
                 const response = await fetch('https://mhfr.agristack.gov.in/farmer-registry-api-mh/agristack/v1/api/farmerRegistryWorkFlowConfiguration/checkApprovalStatus', {
@@ -183,53 +615,78 @@
                 }
 
                 const data = await response.json();
+                
                 if (data.status === 'success' && data.data) {
                     const farmerData = data.data;
-                    // Placeholder fields, adjust based on shared API response
-                    statusDiv.innerHTML = `
-                        <p><strong>Farmer Name:</strong> ${farmerData.farmerName || 'N/A'}</p>
-                        <p><strong>Central ID:</strong> ${farmerData.centralId || farmerData.farmerId || farmerData.enrollmentId || 'N/A'}</p>
-                        <p><strong>Enrollment Status:</strong> ${farmerData.status || farmerData.approvalStatus || 'N/A'}</p>
-                        <p><strong>Enrollment Date:</strong> ${farmerData.enrollmentDate ? new Date(farmerData.enrollmentDate).toLocaleString() : 'N/A'}</p>
-                        <!-- Add more fields based on API response -->
+                    const statusClass = farmerData.status === 'approved' ? 'status-approved' : 'status-pending';
+                    
+                    const resultHTML = `
+                        <div class="result-item">
+                            <span class="result-label">${t.farmerName}:</span>
+                            <span class="result-value">${farmerData.farmerName || 'N/A'}</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">${t.centralId}:</span>
+                            <span class="result-value">${farmerData.centralId || farmerData.farmerId || farmerData.enrollmentId || 'N/A'}</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">${t.enrollmentStatus}:</span>
+                            <span class="result-value">
+                                <span class="status-badge ${statusClass}">
+                                    ${farmerData.status || farmerData.approvalStatus || 'N/A'}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">${t.enrollmentDate}:</span>
+                            <span class="result-value">${farmerData.enrollmentDate ? new Date(farmerData.enrollmentDate).toLocaleDateString() : 'N/A'}</span>
+                        </div>
                     `;
+                    
+                    showResult(resultHTML);
                 } else {
-                    statusDiv.innerText = 'No data found for this Aadhaar number.';
+                    showError(t.noDataFound);
                 }
             } catch (error) {
                 console.error('Error:', error);
-                statusDiv.innerText = '';
-                errorDiv.innerText = 'Failed to fetch status. This may be due to CORS restrictions or API access limits. Redirecting to official site...';
+                showError(t.apiError);
                 setTimeout(() => {
                     window.location.href = 'https://mhfr.agristack.gov.in/farmer-registry-mh/#/checkEnrolmentStatus';
-                }, 2000);
+                }, 3000);
+            } finally {
+                setLoading(false);
             }
         }
 
         // Auto-fetch status if Aadhaar is in URL (for QR code)
-        // Replace this block in window.onload
-window.onload = async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
+        window.onload = async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            const t = translations[currentLang];
 
-    if (!id) return;
+            if (!id) return;
 
-    try {
-        const res = await fetch('data/map.json');
-        const map = await res.json();
+            try {
+                const res = await fetch('data/map.json');
+                const map = await res.json();
 
-        if (map[id]) {
-            document.getElementById('aadhaar').value = map[id];
-            checkStatus();
-        } else {
-            document.getElementById('status').innerText = 'Invalid or expired QR code.';
-        }
-    } catch (err) {
-        console.error(err);
-        document.getElementById('status').innerText = 'Error fetching status mapping.';
-    }
-};
+                if (map[id]) {
+                    document.getElementById('aadhaar').value = map[id];
+                    checkStatus();
+                } else {
+                    showError(t.invalidQR);
+                }
+            } catch (err) {
+                console.error(err);
+                showError(t.fetchError);
+            }
+        };
 
+        // Input formatting
+        document.getElementById('aadhaar').addEventListener('input', function(e) {
+            // Remove non-digits
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
     </script>
 </body>
 </html>
